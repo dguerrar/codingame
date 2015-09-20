@@ -1,0 +1,119 @@
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Skynet2 {
+
+    public static void main(String args[]) {
+        Scanner in = new Scanner(System.in);
+        int N = in.nextInt(); // the total number of nodes in the level, including the gateways
+        
+
+
+        int L = in.nextInt(); // the number of links
+        int E = in.nextInt(); // the number of exit gateways
+        
+
+        
+        //creates the nodelink list
+        List<NodeLink> arrayNodes= new ArrayList<NodeLink>();
+        
+        for (int i = 0; i < L; i++) {
+            int N1 = in.nextInt(); // N1 and N2 defines a link between these nodes
+            int N2 = in.nextInt();
+            //put the link into the array of links for each noche
+            NodeLink link= new NodeLink(N1,N2);
+            arrayNodes.add(link);
+            link.print();
+
+            
+        }
+
+        List<Integer> gateways= new ArrayList<Integer>();
+        for (int i = 0; i < E; i++) {
+            int EI = in.nextInt(); // the index of a gateway node
+            gateways.add(EI);
+            System.err.println("GW at:"+ EI);
+
+        }
+
+        // game loop
+        while (true) {
+            int SI = in.nextInt(); // The index of the node on which the Skynet agent is positioned this turn
+            System.err.println("agent at pos: " +SI);
+
+            //look for the closed node to the Skynet Agent
+
+            lookForNodeLinked(SI,arrayNodes,gateways);
+   
+            // Write an action using System.out.println()
+            // To debug: System.err.println("Debug messages...");
+
+                
+        }
+    }
+    
+    
+    static void lookForNodeLinked(int numNodeSI, List<NodeLink> arrayLinked, List<Integer> gways){
+        
+        boolean found=false;
+        for(Integer gw: gways){
+            System.err.println("gw:"+gw + " numNodeSI:" + numNodeSI);
+            if (false==found){
+                NodeLink ndl1= new NodeLink(numNodeSI,gw.intValue());
+                NodeLink ndl2= new NodeLink(gw.intValue(),numNodeSI);
+                
+                if (arrayLinked.contains(ndl1)){
+                    
+                    arrayLinked.remove(ndl1);
+                    System.out.println(ndl1.node1+" " + ndl1.node2);
+                    found=true;
+                }else if(arrayLinked.contains(ndl2)){
+                    //35 to 28?
+                    ndl2.print();
+                    arrayLinked.remove(ndl2);
+                    System.out.println(ndl2.node1+" " + ndl2.node2);
+                    found=true;
+                }
+            }   
+        }
+        
+        if (false==found){
+            //a link must be cutted in any case
+            NodeLink no=arrayLinked.get(0);
+            arrayLinked.remove(0);
+            System.err.println("remove optional node:" + no.node1+" " + no.node2);
+            System.out.println( no.node1+" " + no.node2);
+        }        
+
+        
+    }
+    
+}
+
+class NodeLink{
+    
+    int node1;
+    int node2;
+
+    public NodeLink(int node1, int node2){
+        this.node1=node1;
+        this.node2=node2;
+    }
+    
+    public boolean equals(Object obj){
+        
+        NodeLink o=(NodeLink)obj;
+        return (this.node1==o.node1 && this.node2==o.node2);
+    }
+    
+    public void print(){
+        System.err.println("N1: "+node1+"/N2:"+node2);
+    }
+
+    
+}
